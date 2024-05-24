@@ -1,25 +1,31 @@
-FROM php:7.4.33-cli
+FROM php:7.4.16-cli
 
-RUN curl -sfL https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
+ENV DEBIAN_FRONTEND noninteractive
+ENV TERM            xterm-color
+
+ARG DEV_MODE
+ENV DEV_MODE $DEV_MODE
+
+COPY ./rootfilesystem/ /
+
+RUN \
+    curl -sfL https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
     chmod +x /usr/bin/composer                                                                     && \
-    composer self-update --clean-backups 2.0.13                                    && \
-    apt-get update && \
-    apt-get add --no-cache libstdc++ && \
-    apt-get add --no-cache --virtual .build-deps $PHPIZE_DEPS curl-dev openssl-dev pcre-dev pcre2-dev zlib-dev && \
-    docker-php-ext-install sockets && \
-    docker-php-source extract && \
-    mkdir /usr/src/php/ext/swoole && \
-    curl -sfL https://github.com/swoole/swoole-src/archive/v4.6.7.tar.gz -o swoole.tar.gz && \
-    tar xfz swoole.tar.gz --strip-components=1 -C /usr/src/php/ext/swoole && \
-    docker-php-ext-configure swoole \
+    composer self-update 1.10.21                                                    && \
+    apt-get update              && \
+    apt-get install -y             \
+        libssl-dev                 \
+        supervisor                 \
+        unzip                      \
+        zlib1g-dev                 \
+        --no-install-recommends && \
+    install-swoole.sh 4.4.25 \
         --enable-http2   \
         --enable-mysqlnd \
         --enable-openssl \
-        --enable-sockets --enable-swoole-curl --enable-swoole-json && \
-    docker-php-ext-install -j$(nproc) swoole && \
-    rm -f swoole.tar.gz $HOME/.composer/*-old.phar && \
-    docker-php-source delete && \
-    apt-get del .build-deps
+        --enable-sockets && \
+    mkdir -p /var/log/supervisor && \
+    rm -rf /var/lib/apt/lists/* $HOME/.composer/*-old.phar /usr/bin/qemu-*-static
 
 RUN pecl install mongodb-1.16.0 && docker-php-ext-enable mongodb
 
