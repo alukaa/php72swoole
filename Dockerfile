@@ -13,33 +13,19 @@ RUN pecl install -o -f redis \
 &&  rm -rf /tmp/pear \
 &&  docker-php-ext-enable redis
 
-RUN apt-get install --update \
-		$PHPIZE_DEPS \
-		freetype-dev \
-		git \
-		libjpeg-turbo-dev \
-		libpng-dev \
-		libxml2-dev \
-		libzip-dev \
-		openssh-client \
-		php7-json \
-		php7-openssl \
-		php7-pdo \
-		php7-pdo_mysql \
-		php7-session \
-		php7-simplexml \
-		php7-tokenizer \
-		php7-xml \
-		imagemagick \
-		imagemagick-libs \
-		imagemagick-dev \
-		php7-imagick \
-		php7-pcntl \
-		php7-zip \
-		sqlite \
-	&& docker-php-ext-install iconv soap sockets exif bcmath pdo_mysql pcntl \
-	&& docker-php-ext-configure gd --with-jpeg --with-freetype \
-	&& docker-php-ext-install gd \
-	&& docker-php-ext-install zip
+RUN apt-get clean all && apt-get update && apt-get install -y --no-install-recommends --allow-downgrades \
+        git \
+        zlib1g-dev \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libpng-dev \
+        libzip-dev \
+    && docker-php-ext-install zip \
+    && docker-php-ext-install pdo pdo_mysql mysqli \
+    && docker-php-ext-install -j$(nproc) iconv \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install bcmath \
+    && docker-php-ext-install calendar
 
 WORKDIR "/var/www/"
