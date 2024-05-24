@@ -1,4 +1,4 @@
-FROM php:7.2.34-cli-alpine3.12
+FROM php:7.4.19-cli-alpine3.12
 
 RUN \
     curl -sfL https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
@@ -22,7 +22,7 @@ RUN \
     docker-php-source delete && \
     apk del .build-deps
 
-RUN pecl install mongodb-1.16.0 && docker-php-ext-enable mongodb
+RUN pecl install mongodb && docker-php-ext-enable mongodb
 
 RUN pecl install -o -f redis \
 &&  rm -rf /tmp/pear \
