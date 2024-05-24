@@ -1,11 +1,11 @@
-FROM php:7.4-cli
+FROM php:7.4.33-cli
 
 RUN curl -sfL https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
     chmod +x /usr/bin/composer                                                                     && \
     composer self-update --clean-backups 2.0.13                                    && \
-    apk update && \
-    apk add --no-cache libstdc++ && \
-    apk add --no-cache --virtual .build-deps $PHPIZE_DEPS curl-dev openssl-dev pcre-dev pcre2-dev zlib-dev && \
+    apt-get update && \
+    apt-get add --no-cache libstdc++ && \
+    apt-get add --no-cache --virtual .build-deps $PHPIZE_DEPS curl-dev openssl-dev pcre-dev pcre2-dev zlib-dev && \
     docker-php-ext-install sockets && \
     docker-php-source extract && \
     mkdir /usr/src/php/ext/swoole && \
@@ -19,7 +19,7 @@ RUN curl -sfL https://getcomposer.org/installer | php -- --install-dir=/usr/bin 
     docker-php-ext-install -j$(nproc) swoole && \
     rm -f swoole.tar.gz $HOME/.composer/*-old.phar && \
     docker-php-source delete && \
-    apk del .build-deps
+    apt-get del .build-deps
 
 RUN pecl install mongodb-1.16.0 && docker-php-ext-enable mongodb
 
