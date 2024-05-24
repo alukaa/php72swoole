@@ -10,7 +10,7 @@ RUN \
     docker-php-ext-install sockets && \
     docker-php-source extract && \
     mkdir /usr/src/php/ext/swoole && \
-    curl -sfL https://github.com/swoole/swoole-src/archive/v4.6.7.tar.gz -o swoole.tar.gz && \
+    curl -sfL https://github.com/swoole/swoole-src/archive/v4.3.3.tar.gz -o swoole.tar.gz && \
     tar xfz swoole.tar.gz --strip-components=1 -C /usr/src/php/ext/swoole && \
     docker-php-ext-configure swoole \
         --enable-http2   \
