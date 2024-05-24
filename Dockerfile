@@ -1,10 +1,11 @@
 FROM php:7.4.19-cli-alpine3.12
 
+RUN apk add autoconf
+RUN apk add build-base
 RUN pecl channel-update pecl.php.net
 RUN pecl install swoole-4.3.3 &&  docker-php-ext-enable swoole
 
-RUN apk add autoconf
-RUN apk add build-base
+
 
 RUN pecl install mongodb && docker-php-ext-enable mongodb
 
