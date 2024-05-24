@@ -1,7 +1,6 @@
 FROM php:7.2.34-cli-alpine3.12
 
-RUN \
-    curl -sfL https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
+RUN curl -sfL https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
     chmod +x /usr/bin/composer                                                                     && \
     composer self-update --clean-backups 2.0.13                                    && \
     apk update && \
@@ -20,7 +19,7 @@ RUN \
     docker-php-ext-install -j$(nproc) swoole && \
     rm -f swoole.tar.gz $HOME/.composer/*-old.phar && \
     docker-php-source delete && \
-    apk del .build-deps \
+    apk del .build-deps
 
 RUN pecl install mongodb && docker-php-ext-enable mongodb
 
