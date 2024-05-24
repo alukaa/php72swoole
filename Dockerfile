@@ -1,4 +1,4 @@
-FROM php:7.4.19-cli-alpine3.12
+FROM php:7.3
 
 RUN apk add autoconf
 RUN apk add build-base
