@@ -1,5 +1,7 @@
 FROM php:7.3-cli
 
+RUN apt-get install -y libcurl4-openssl-dev pkg-config libssl-dev
+
 RUN apt-get install autoconf
 #RUN apt-get install build-base
 RUN pecl channel-update pecl.php.net
@@ -26,7 +28,7 @@ RUN apt-get clean all && apt-get update && apt-get install -y --no-install-recom
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install bcmath \
-    && docker-php-ext-install calendar 
+    && docker-php-ext-install calendar
 
 RUN curl -sS https://getcomposer.org/installer | php -- \
 --install-dir=/usr/bin --filename=composer \
