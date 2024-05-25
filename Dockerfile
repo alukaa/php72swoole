@@ -1,6 +1,6 @@
 FROM php:7.3-cli
 
-RUN apt-get install -y libcurl4-openssl-dev pkg-config libssl-dev
+RUN  apt update && apt-get install -y libcurl4-openssl-dev pkg-config libssl-dev
 
 RUN apt-get install autoconf
 #RUN apt-get install build-base
